@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+
+    "rootDir": "./src",
+
+    // Caution here: https://github.com/Microsoft/TypeScript/issues/29172
+    "outDir": "./dist",
+
+    "types": ["node"],
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "allowJs": false,
+
+    "incremental": false,
+    "removeComments": false,
+    "allowSyntheticDefaultImports": true,
+
+    "declaration": true,
+    "pretty": true,
+    "newLine": "lf",
+    "stripInternal": true,
+    "useDefineForClassFields": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+
+
+    // "strictPropertyInitialization": false
+  },
+  "ts-node": {
+    "esm": true,
+  },
+  "include": ["./src/**/*.ts"],
+  "exclude": ["node_modules"]
+}
