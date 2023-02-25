@@ -15,10 +15,10 @@ export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @Column({ type: 'varchar', nullable: false, unique: true })
+  @Column({ type: 'varchar', nullable: true, unique: false })
   username?: string;
 
-  @Column({ type: 'varchar', nullable: false, select: false })
+  @Column({ type: 'varchar', nullable: true, select: false })
   password?: string;
 
   @Column({ type: 'varchar', nullable: true, unique: true })
@@ -27,8 +27,11 @@ export class UserEntity {
   @Column({ type: 'varchar', nullable: true })
   lastname?: string;
 
-  @Column({ type: 'varchar', nullable: false })
+  @Column({ type: 'varchar', nullable: false, unique: true })
   email?: string;
+
+  @Column({ type: 'varchar', nullable: true})
+  googleAccessToken?: string;
 
   @CreateDateColumn()
   createdOn?: Date;
@@ -49,6 +52,8 @@ export class UserEntity {
 
   @BeforeInsert()
   async hashPassword() {
-    this.password = await bcrypt.hash(this.password!, 10);
+    if(this.password){
+      this.password = await bcrypt.hash(this.password!, 10);
+    }
   }
 }

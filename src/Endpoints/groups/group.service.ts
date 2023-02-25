@@ -18,7 +18,19 @@ export class GroupService {
 
   ) {}
 
-  async getAllGroups(userid: string) {
+  async getAllGroups() {
+    const groups = await groupRepository.find({
+      relations:{
+        owner: true,
+        users: true
+      }
+    });
+
+    return groups;
+  }
+
+
+  async getMyGroups(userid: string) {
     const groups = await groupRepository.find({
       where: {
         users:{

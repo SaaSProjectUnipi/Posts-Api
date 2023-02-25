@@ -5,6 +5,8 @@ import { LoginUserDto } from '../users/dto/user-login.dto';
 import { UserDto } from '../users/dto/user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { randomUUID } from 'crypto';
+import {GoogleUserDto} from "./dto/GoogleUserDto.dto";
+import {userRepository} from "../../TypeOrm/Repositories/user.repository";
 
 @Injectable()
 export class AuthService {
@@ -18,6 +20,32 @@ export class AuthService {
     return await this.usersService.create(userDto);
 
   }
+
+
+  async singInGoogle(user: GoogleUserDto) {
+      console.log(user)
+
+    let userInDb = await userRepository.findOne({
+      where:{
+        email : user.email
+      }
+    })
+    if(userInDb){
+       return this.getTokens(userInDb)
+    }else{
+      let userCreated = await userRepository.save(userRepository.create({
+        googleAccessToken: user.accessToken,
+        email: user.email,
+        firstname: user.firstName,
+        lastname: user.lastName,
+        username: user.firstName ? user.firstName : user.lastName ? user.lastName : user.email
+      }))
+
+      return this.getTokens(userCreated)
+    }
+
+  }
+
 
   async logout(token: string){
     let payload = this.jwtService.decode(token.split("Bearer ")[1].trim())

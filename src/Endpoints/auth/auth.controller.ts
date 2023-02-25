@@ -16,6 +16,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { getAccessTokenDecorator } from '../decorators/getAccessToken.decorator';
 import {UserDto} from "../users/dto/user.dto";
 import {UsersService} from "../users/users.service";
+import {GoogleUserDto} from "./dto/GoogleUserDto.dto";
+import {GetGoogleUser} from "./Decorators/extractGoogleUser.decorator";
 
 @UsePipes(new ValidationPipe({transform: true}))
 @Controller('auth')
@@ -40,10 +42,24 @@ export class AuthController {
     return await this.authService.login(loginUserDto);
   }
 
-  @Post('logout')
+  @Get('logout')
   public async logout(@getAccessTokenDecorator() token: any) {
     return await this.authService.logout(token);
   }
+
+
+
+  @UseGuards(AuthGuard("google"))
+  @Get('/google/callback')
+  singInGoogle(@GetGoogleUser() user: GoogleUserDto){
+    return this.authService.singInGoogle(user);
+  }
+
+  @UseGuards(AuthGuard("google"))
+  @Get('/google')
+  async signInWithGoogle() {
+  }
+
 
   @Get('user')
   @UseGuards(AuthGuard())
@@ -59,6 +75,15 @@ export class AuthController {
     let user = req.user as UserDto
 
     return this.userService.addToContacts(user.id,email);
+  }
+
+  @Get('/contacts')
+  @UseGuards(AuthGuard())
+  public async getAllContacts(@Req() req: any,
+                             @Query('contact') email: string,) {
+    let user = req.user as UserDto
+
+    return this.userService.getAllContacts(user.id);
   }
 
 }

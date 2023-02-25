@@ -20,12 +20,21 @@ import {UpdatePostsDto} from "../posts/dto/updatePosts.dto";
 export class GroupsController {
   constructor(private groupService: GroupService) {}
 
+
   @UseGuards(AuthGuard())
-  @Get('')
+  @Get('/all')
   async getAllGroups( @Req() req: any) {
     const user = req.user as UserDto;
 
-    return await this.groupService.getAllGroups(user.id);
+    return await this.groupService.getAllGroups();
+  }
+
+  @UseGuards(AuthGuard())
+  @Get('')
+  async getMyGroups( @Req() req: any) {
+    const user = req.user as UserDto;
+
+    return await this.groupService.getMyGroups(user.id);
   }
 
   @Get(':id')

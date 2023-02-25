@@ -16,6 +16,19 @@ export class UsersService {
   }
 
 
+  async getAllContacts(userId:string){
+    let user = await userRepository.findOne({
+      where:{
+        id: userId
+      },
+      relations:{
+        contacts: true
+      }
+    })
+
+    return user!.contacts
+  }
+
   async addToContacts(userId:string,email:string){
     let user = await userRepository.findOne({
       where:{
