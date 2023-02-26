@@ -142,7 +142,9 @@ export class GroupService {
         })
 
       if(user){
-       user.groups = user.groups?.filter(item => item.id !== group.id)
+        user.groups = user!.groups!.filter((grouptmp) => {
+          return grouptmp.id !== group.id
+        })
         await userRepository.save(user)
       }
     }else{
