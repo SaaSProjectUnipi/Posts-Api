@@ -26,13 +26,14 @@ export class UsersService {
       }
     })
 
+    console.log(user)
     return user!.contacts
   }
 
   async addToContacts(userId:string,email:string){
     let user = await userRepository.findOne({
       where:{
-        email: email
+        id: userId
       },
       relations: {
         contacts: true
@@ -42,14 +43,12 @@ export class UsersService {
     let contact = await userRepository.findOne({
       where: {
         email: email
-      },
-      relations: {
-        contacts: true
       }
     })
     if(!contact){
       throw new HttpException('Not Valid Contact', HttpStatus.NOT_FOUND);
     }
+    console.log(user!.contacts)
     if(user!.contacts?.some(user => user.id === contact!.id)){
       throw new HttpException('Already in your contacts', HttpStatus.FORBIDDEN);
     }
