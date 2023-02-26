@@ -135,14 +135,20 @@ export class GroupService {
     }
 
     if(group.ownerId !== userDto.id){
-      throw new HttpException(
-          `This isn't your group to edit it!`,
-          HttpStatus.FORBIDDEN,
-      );
+        let user = await userRepository.findOne({
+          where:{
+            id: userDto.id
+          }
+        })
+
+      if(user){
+       user.groups = user.groups?.filter(item => item.id !== group.id)
+        await userRepository.save(user)
+      }
+    }else{
+      await groupRepository.delete({ id }); // delete posts list
     }
 
-
-    await groupRepository.delete({ id }); // delete posts list
 
   }
 
